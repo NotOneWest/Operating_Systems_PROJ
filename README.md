@@ -1,4 +1,4 @@
-# Operating_Systems_PROG
+# Operating_Systems_PROJ
 Programming Tasks in Operating System Lessons
 |No|Content|Y/N|
 |:--------:|:--------:|:--------:|
