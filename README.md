@@ -2,7 +2,7 @@
 Programming Tasks in Operating System Lessons
 |No|Content|Y/N|
 |:--------:|:--------:|:--------:|
-| PROG1 | Linux Simple Shell | Y |
-| PROG2 | Sudoku with Pthread | Y |
-| PROG3 | Reader-Writer with Lock | Y |
-| PROG4 | Thread Pool | Y |
+| Project 1 | Linux Simple Shell | Y |
+| Project 2 | Sudoku with Pthread | Y |
+| Project 3 | Reader-Writer with Lock | Y |
+| Project 4 | Thread Pool | Y |
