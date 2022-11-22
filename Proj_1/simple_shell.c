@@ -170,47 +170,38 @@ int main(void){
         }
         exit(0); // cd 명령어 종료 처리
       } else{ // pipe 명령어 입력시 실행
-        int pipe_fd[2]; // 파이프 파일 디스크립터 생성
-        if(pipe(pipe_fd) == -1) {
-          perror("pipe error"); // 파이프 에러 표시
-          exit(1);
-        }
-        pid_t pipe_pid = fork(); // pipe 연결 시 명령어 두가지 실행 위해 한번더 process를 생성한다.
-        if(pipe_pid<0){
-          perror("fork error");
-          exit(1);
-        } else if(pipe_pid == 0){ // child process
-          dup2(pipe_fd[1], 1); // write
-          close(pipe_fd[0]);
-          if(execvp(args[0], args) < 0){
-            perror(args[0]);
+        int pipe_fd[2];
+        if (pipe(pipe_fd) == -1) {
+            perror("Error: Pipe failed");
             exit(1);
-          } else{
-            execvp(args[0], args); // 명령어 실행
-            exit(0);
-          }
-        } // parent process
-        if(strchr(input, '&') != NULL){ // & 입력 시 백그라운드 실행
-          printf("[1] %d\n", getpid()); //
-        } else wait(NULL); // & 없을 시 wait
-        dup2(pipe_fd[0],0); // read
-        close(pipe_fd[1]);
-        if(execvp(pipe_args[0], pipe_args) < 0){
-          perror(args[0]);
-          exit(1);
-        } else{
-          execvp(pipe_args[0], pipe_args); // 명령어 실행
-          exit(0);
         }
+
+        pid_t pipe_pid = fork();
+        if (pipe_pid == 0) {
+            dup2(pipe_fd[1], STDOUT_FILENO);
+            close(pipe_fd[0]);
+            close(pipe_fd[1]);
+            execvp(args[0], args);
+            exit(0);
+        }
+
+        dup2(pipe_fd[0], STDIN_FILENO);
+        close(pipe_fd[1]);
+        close(pipe_fd[0]);
+        execvp(pipe_args[0], pipe_args);
+        exit(0);
+
+        // wait pipe_pid
+        if(strchr(input, '&') != NULL){
+          printf("[1] %d\n", getpid());
+        } else wait(NULL); // & 없을 시 wait
+
+        // wait pid
+        if(strchr(input, '&') != NULL){
+          printf("[1] %d\n", getpid());
+        } else wait(NULL); // & 없을 시 wait
       }
     }
   }
   return 0;
 }
-
-// 이름_학번_PROG1.pdf 로 제출할 것.
-// 작성한 함수에 대한 설명 (주석)
-// 컴파일 과정 보여주는 화면들 캡처
-// 실행 결과물에 대한 상세한 설명
-// 과제 수행하며 경험한 문제점과 느낀점
-// 소스파일 별도 제출
